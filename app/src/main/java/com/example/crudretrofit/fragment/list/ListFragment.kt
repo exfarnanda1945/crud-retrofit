@@ -69,7 +69,7 @@ class ListFragment : Fragment() {
             adapter = rvAdapter
             rv.setHasFixedSize(true)
             layoutManager = LinearLayoutManager(view.context)
-            rvAdapter.setData(resBody!!)
+            rvAdapter.setData(resBody)
         }
 
         rvAdapter.setOnItemClickCallback(object:ListRvAdapter.IOnItemCallBack{
@@ -79,7 +79,6 @@ class ListFragment : Fragment() {
                     mViewModel.delete(id)
                     Toast.makeText(requireContext(),"Delete successfully",Toast.LENGTH_LONG).show()
                     rvAdapter.notifyItemRemoved(position)
-                    mViewModel.list()
                 }
 
                 alertBuilder.setNegativeButton("No"){_,_ ->}

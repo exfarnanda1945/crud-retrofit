@@ -14,7 +14,7 @@ import com.example.crudretrofit.models.PostModel
 // refresh rv
 // https://stackoverflow.com/questions/31367599/how-to-update-recyclerview-adapter-data
 
-class ListRvAdapter() : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
+class ListRvAdapter : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
 
     private val diffCallBack=object: DiffUtil.ItemCallback<PostModel>(){
         override fun areItemsTheSame(oldItem: PostModel, newItem: PostModel): Boolean {
@@ -60,7 +60,7 @@ class ListRvAdapter() : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
        return differ.currentList.size
     }
 
-    fun setData(list:List<PostModel>){
+    fun setData(list:List<PostModel>?){
         differ.submitList(list)
     }
 
