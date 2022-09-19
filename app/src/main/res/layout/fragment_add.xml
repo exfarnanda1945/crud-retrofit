@@ -9,18 +9,18 @@
     <EditText
         android:id="@+id/edt_title"
         android:layout_width="291dp"
-        android:layout_height="45dp"
+        android:layout_height="48dp"
         android:layout_marginTop="136dp"
+        android:autofillHints=""
         android:ems="10"
+        android:hint="@string/title"
         android:inputType="textPersonName"
-       android:hint="Title"
         app:layout_constraintBottom_toTopOf="@+id/btn_save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:autofillHints="" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/edt_description"
@@ -28,20 +28,21 @@
         android:layout_height="49dp"
         android:layout_marginTop="24dp"
         android:ems="10"
+        android:hint="@string/description"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
-        android:hint="Description"
+        android:textColorHint="@color/gray_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_title"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_title" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="244dp"
         android:layout_height="55dp"
         android:layout_marginBottom="320dp"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
