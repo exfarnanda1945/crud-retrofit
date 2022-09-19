@@ -1,34 +1,48 @@
 package com.example.crudretrofit.fragment.list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.findNavController
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.crudretrofit.R
+import com.example.crudretrofit.databinding.RvRowBinding
 import com.example.crudretrofit.models.IdModel
 import com.example.crudretrofit.models.PostModel
 
 // refresh rv
 // https://stackoverflow.com/questions/31367599/how-to-update-recyclerview-adapter-data
 
-class ListRvAdapter(private var rvList:List<PostModel>) : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
+class ListRvAdapter() : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
+
+    private val diffCallBack=object: DiffUtil.ItemCallback<PostModel>(){
+        override fun areItemsTheSame(oldItem: PostModel, newItem: PostModel): Boolean {
+            return oldItem._id == newItem._id
+        }
+
+        override fun areContentsTheSame(oldItem: PostModel, newItem: PostModel): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    private val differ = AsyncListDiffer(this,diffCallBack)
+
     private lateinit var onItemCallBack:IOnItemCallBack
 
-    class ViewHolder(it: View):RecyclerView.ViewHolder(it) {
-        val tvRv:TextView = it.findViewById(R.id.textView)
-        val btnDelete:Button = it.findViewById(R.id.btn_delete)
-        val btnUpdate:Button = it.findViewById(R.id.btn_update)
+    inner class ViewHolder(itemBinding: RvRowBinding):RecyclerView.ViewHolder(itemBinding.root) {
+        val tvRv:TextView = itemBinding.textView
+        val btnDelete:Button = itemBinding.btnDelete
+        val btnUpdate:Button = itemBinding.btnUpdate
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.rv_row,parent,false))
+        val itemBinding = RvRowBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return ViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = rvList[position]
+        val item = differ.currentList[position]
         val text = "${position + 1}. ${ item.title}"
 
         holder.tvRv.text = text
@@ -38,14 +52,18 @@ class ListRvAdapter(private var rvList:List<PostModel>) : RecyclerView.Adapter<L
         }
 
         holder.btnUpdate.setOnClickListener {
-            val act = ListFragmentDirections.actionListFragmentToUpdateFragment(item)
-            holder.itemView.findNavController().navigate(act)
+            onItemCallBack.update(item)
         }
     }
 
     override fun getItemCount(): Int {
-       return rvList.size
+       return differ.currentList.size
     }
+
+    fun setData(list:List<PostModel>){
+        differ.submitList(list)
+    }
+
 
     fun setOnItemClickCallback(action:IOnItemCallBack){
     this.onItemCallBack = action
@@ -53,6 +71,7 @@ class ListRvAdapter(private var rvList:List<PostModel>) : RecyclerView.Adapter<L
 
     interface IOnItemCallBack{
         fun delete(id:IdModel,position:Int)
+        fun update(data:PostModel)
     }
 
 }

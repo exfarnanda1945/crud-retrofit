@@ -55,13 +55,11 @@ class ListFragment : Fragment() {
         mViewModel.list()
         mViewModel.response.observe(viewLifecycleOwner) { res ->
             if (res.isSuccessful) {
-                val response = res.body()
-                    if(response?.isEmpty() == true){
+                    if(res.body()?.isEmpty() == true){
                         binding.rvPost.visibility = View.INVISIBLE
                         binding.tvEmptyList.visibility =  View.VISIBLE
-                    }else{
-                        renderRv(response,rv,view)
                     }
+                renderRv(res.body(),rv,view)
                 loading.stop()
             }
         }
@@ -69,12 +67,12 @@ class ListFragment : Fragment() {
 
 
     private fun renderRv(resBody:List<PostModel>?,rv:RecyclerView,view:View) {
-        val rvAdapter = ListRvAdapter(resBody!!)
+        val rvAdapter = ListRvAdapter()
         rv.apply {
             adapter = rvAdapter
             rv.setHasFixedSize(true)
             layoutManager = LinearLayoutManager(view.context)
-
+            rvAdapter.setData(resBody!!)
         }
 
         rvAdapter.setOnItemClickCallback(object:ListRvAdapter.IOnItemCallBack{
@@ -91,6 +89,11 @@ class ListFragment : Fragment() {
                 alertBuilder.setTitle("Delete this?")
                 alertBuilder.setMessage("Are you sure want to delete this")
                 alertBuilder.create().show()
+            }
+
+            override fun update(data: PostModel) {
+                val act = ListFragmentDirections.actionListFragmentToUpdateFragment(data)
+                findNavController().navigate(act)
             }
         })
     }
