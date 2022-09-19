@@ -50,7 +50,6 @@ class AddFragment : Fragment() {
             mViewModel.post(post)
             Toast.makeText(requireContext(),"Successfully added!",Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
-            mViewModel.list()
         }
 
 

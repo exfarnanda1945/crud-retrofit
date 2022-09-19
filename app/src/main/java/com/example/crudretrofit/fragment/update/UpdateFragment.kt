@@ -57,6 +57,5 @@ class UpdateFragment : Fragment() {
         mViewModel.update(post)
         Toast.makeText(requireContext(), "Successfully update!", Toast.LENGTH_LONG).show()
         findNavController().navigate(R.id.action_updateFragment_to_listFragment)
-        mViewModel.list()
     }
 }
