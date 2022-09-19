@@ -23,18 +23,21 @@ class MainViewModel(private val repo:PostRepository):ViewModel() {
     fun post(post:PostModel){
         viewModelScope.launch {
            repo.post(post)
+            list()
         }
     }
 
     fun delete(id:IdModel){
         viewModelScope.launch {
             repo.delete(id)
+            list()
         }
     }
 
     fun update(post:PostModel){
         viewModelScope.launch{
             repo.update(post)
+            list()
         }
     }
 
