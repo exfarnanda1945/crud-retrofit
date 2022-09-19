@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +25,7 @@ class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var mViewModel: MainViewModel
+    private val mViewModel: MainViewModel by viewModels { MainViewModelFactory(PostRepository()) }
     private lateinit var loading:LoadingBar
 
     override fun onCreateView(
@@ -49,9 +49,6 @@ class ListFragment : Fragment() {
 
     private fun get(view: View) {
         val rv = binding.rvPost
-        val repo = PostRepository()
-        val mViewModelFac = MainViewModelFactory(repo)
-        mViewModel = ViewModelProvider(this, mViewModelFac)[MainViewModel::class.java]
         mViewModel.list()
         mViewModel.response.observe(viewLifecycleOwner) { res ->
             if (res.isSuccessful) {

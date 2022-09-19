@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.crudretrofit.R
 import com.example.crudretrofit.databinding.FragmentAddBinding
@@ -22,7 +22,7 @@ class AddFragment : Fragment() {
     private var _binding:FragmentAddBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var mViewModel:MainViewModel
+    private val mViewModel: MainViewModel by viewModels { MainViewModelFactory(PostRepository()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,10 +30,6 @@ class AddFragment : Fragment() {
     ): View {
         _binding = FragmentAddBinding.inflate(layoutInflater,container,false)
         val view = binding.root
-
-        val repo = PostRepository()
-        val mViewModelFactory = MainViewModelFactory(repo)
-        mViewModel = ViewModelProvider(this,mViewModelFactory)[MainViewModel::class.java]
 
         binding.btnSave.setOnClickListener {
             post()
