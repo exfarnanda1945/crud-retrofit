@@ -2,13 +2,11 @@ package com.example.crudretrofit.fragment.add
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.crudretrofit.R
@@ -35,7 +33,7 @@ class AddFragment : Fragment() {
 
         val repo = PostRepository()
         val mViewModelFactory = MainViewModelFactory(repo)
-        mViewModel = ViewModelProvider(this,mViewModelFactory).get(MainViewModel::class.java)
+        mViewModel = ViewModelProvider(this,mViewModelFactory)[MainViewModel::class.java]
 
         binding.btnSave.setOnClickListener {
             post()

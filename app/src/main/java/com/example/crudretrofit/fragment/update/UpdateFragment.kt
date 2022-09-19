@@ -38,7 +38,7 @@ class UpdateFragment : Fragment() {
 
         val repo = PostRepository()
         val mViewModelFactory = MainViewModelFactory(repo)
-        mViewModel = ViewModelProvider(this,mViewModelFactory).get(MainViewModel::class.java)
+        mViewModel = ViewModelProvider(this,mViewModelFactory)[MainViewModel::class.java]
 
         binding.btnUpdate.setOnClickListener {
             update(title,desc)

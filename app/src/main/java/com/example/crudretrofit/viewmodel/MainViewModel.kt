@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.crudretrofit.models.IdModel
 import com.example.crudretrofit.models.PostModel
 import com.example.crudretrofit.repository.PostRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
