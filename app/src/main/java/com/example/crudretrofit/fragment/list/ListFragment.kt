@@ -73,12 +73,11 @@ class ListFragment : Fragment() {
         }
 
         rvAdapter.setOnItemClickCallback(object:ListRvAdapter.IOnItemCallBack{
-            override fun delete(id: IdModel,position:Int) {
+            override fun delete(id: IdModel) {
                 val alertBuilder = AlertDialog.Builder(requireContext())
                 alertBuilder.setPositiveButton("Yes") { _, _ ->
                     mViewModel.delete(id)
                     Toast.makeText(requireContext(),"Delete successfully",Toast.LENGTH_LONG).show()
-                    rvAdapter.notifyItemRemoved(position)
                 }
 
                 alertBuilder.setNegativeButton("No"){_,_ ->}

@@ -48,7 +48,7 @@ class ListRvAdapter : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
         holder.tvRv.text = text
         holder.btnDelete.setOnClickListener {
             val id = IdModel(item._id!!)
-            onItemCallBack.delete(id,holder.adapterPosition)
+            onItemCallBack.delete(id)
         }
 
         holder.btnUpdate.setOnClickListener {
@@ -70,7 +70,7 @@ class ListRvAdapter : RecyclerView.Adapter<ListRvAdapter.ViewHolder>() {
     }
 
     interface IOnItemCallBack{
-        fun delete(id:IdModel,position:Int)
+        fun delete(id:IdModel)
         fun update(data:PostModel)
     }
 
