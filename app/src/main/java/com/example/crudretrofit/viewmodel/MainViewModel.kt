@@ -1,5 +1,6 @@
 package com.example.crudretrofit.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,13 +11,13 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MainViewModel(private val repo:PostRepository):ViewModel() {
-    val response:MutableLiveData<Response<List<PostModel>>> = MutableLiveData()
-
+   private var _response:MutableLiveData<Response<List<PostModel>>> = MutableLiveData()
+    val response: LiveData<Response<List<PostModel>>> get() = _response
 
     fun list(){
         viewModelScope.launch {
             val res = repo.list()
-            response.value = res
+            _response.value = res
         }
     }
 
