@@ -58,4 +58,10 @@ class UpdateFragment : Fragment() {
         Toast.makeText(requireContext(), "Successfully update!", Toast.LENGTH_LONG).show()
         findNavController().navigate(R.id.action_updateFragment_to_listFragment)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

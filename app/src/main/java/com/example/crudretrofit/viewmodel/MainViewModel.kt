@@ -10,35 +10,35 @@ import com.example.crudretrofit.repository.PostRepository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MainViewModel(private val repo:PostRepository):ViewModel() {
-   private var _response:MutableLiveData<Response<List<PostModel>>> = MutableLiveData()
+class MainViewModel(private val repo: PostRepository) : ViewModel() {
+    private var _response: MutableLiveData<Response<List<PostModel>>> = MutableLiveData()
     val response: LiveData<Response<List<PostModel>>> get() = _response
 
-    fun list(){
+    fun list() {
         viewModelScope.launch {
             val res = repo.list()
             _response.value = res
         }
     }
 
-    fun post(post:PostModel){
+    fun post(post: PostModel) {
         viewModelScope.launch {
-           repo.post(post)
-            list()
+            repo.post(post)
+
         }
     }
 
-    fun delete(id:IdModel){
+    fun delete(id: IdModel) {
         viewModelScope.launch {
             repo.delete(id)
-            list()
+
         }
     }
 
-    fun update(post:PostModel){
-        viewModelScope.launch{
+    fun update(post: PostModel) {
+        viewModelScope.launch {
             repo.update(post)
-            list()
+
         }
     }
 

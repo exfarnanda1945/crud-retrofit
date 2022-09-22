@@ -51,9 +51,11 @@ class AddFragment : Fragment() {
             Toast.makeText(requireContext(),"Successfully added!",Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         }
+    }
 
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

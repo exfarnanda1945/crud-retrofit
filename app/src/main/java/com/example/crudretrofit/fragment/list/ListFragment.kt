@@ -2,6 +2,7 @@ package com.example.crudretrofit.fragment.list
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,6 +92,11 @@ class ListFragment : Fragment() {
                 findNavController().navigate(act)
             }
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
