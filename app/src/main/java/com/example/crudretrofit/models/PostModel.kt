@@ -2,7 +2,6 @@ package com.example.crudretrofit.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
 
 @Parcelize
 data class PostModel(
