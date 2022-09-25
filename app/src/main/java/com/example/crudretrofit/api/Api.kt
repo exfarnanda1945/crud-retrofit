@@ -19,5 +19,5 @@ interface Api {
     suspend fun delete(@Body id:IdModel):Response<PostModelDelete>
 
     @PUT("/note")
-    suspend fun update(@Body post:PostModel)
+    suspend fun update(@Body post:PostModel):Response<Unit>
 }
