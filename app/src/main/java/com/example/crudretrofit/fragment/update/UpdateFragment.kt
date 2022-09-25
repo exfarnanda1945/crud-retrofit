@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.crudretrofit.R
 import com.example.crudretrofit.databinding.FragmentUpdateBinding
 import com.example.crudretrofit.models.PostModel
 import com.example.crudretrofit.repository.PostRepository
+import com.example.crudretrofit.utils.HandlerApiClient
 import com.example.crudretrofit.viewmodel.MainViewModel
 import com.example.crudretrofit.viewmodel.MainViewModelFactory
 
@@ -22,7 +22,11 @@ class UpdateFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args by navArgs<UpdateFragmentArgs>()
-    private val mViewModel: MainViewModel by viewModels { MainViewModelFactory(PostRepository()) }
+    private val mViewModel: MainViewModel by activityViewModels {
+        MainViewModelFactory(
+            PostRepository()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +58,16 @@ class UpdateFragment : Fragment() {
             args.detailNote.createdAt,
             ""
         )
-        mViewModel.update(post)
-        Toast.makeText(requireContext(), "Successfully update!", Toast.LENGTH_LONG).show()
-        findNavController().navigate(R.id.action_updateFragment_to_listFragment)
+        mViewModel.update(post).observe(viewLifecycleOwner) {
+           HandlerApiClient.handle(it,requireContext(),object :HandlerApiClient.HandlerCallback{
+               override fun onSuccess() {
+                   Toast.makeText(requireContext(), "Successfully update!", Toast.LENGTH_SHORT)
+                       .show()
+                   findNavController().navigateUp()
+               }
+           })
+        }
+
     }
 
     override fun onDestroyView() {

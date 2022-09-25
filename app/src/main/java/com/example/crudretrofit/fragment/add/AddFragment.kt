@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.crudretrofit.R
 import com.example.crudretrofit.databinding.FragmentAddBinding
 import com.example.crudretrofit.models.PostModel
 import com.example.crudretrofit.repository.PostRepository
+import com.example.crudretrofit.utils.HandlerApiClient
 import com.example.crudretrofit.viewmodel.MainViewModel
 import com.example.crudretrofit.viewmodel.MainViewModelFactory
 import java.time.LocalDateTime
@@ -22,7 +22,7 @@ class AddFragment : Fragment() {
     private var _binding:FragmentAddBinding? = null
     private val binding get() = _binding!!
 
-    private val mViewModel: MainViewModel by viewModels { MainViewModelFactory(PostRepository()) }
+    private val mViewModel: MainViewModel by activityViewModels { MainViewModelFactory(PostRepository()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,13 +43,20 @@ class AddFragment : Fragment() {
         val body = binding.edtDescription.text
 
         if(TextUtils.isEmpty(title) || TextUtils.isEmpty(body)){
-            Toast.makeText(requireContext(),"Please fill the fields",Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(),"Please fill the fields",Toast.LENGTH_SHORT).show()
         }else{
             val date: String = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)
             val post = PostModel("",true,date,title.toString(),body.toString(),"","" )
-            mViewModel.post(post)
-            Toast.makeText(requireContext(),"Successfully added!",Toast.LENGTH_LONG).show()
-            findNavController().navigate(R.id.action_addFragment_to_listFragment)
+            mViewModel.post(post).observe(viewLifecycleOwner){
+                HandlerApiClient.handle(it,requireContext(),object:HandlerApiClient.HandlerCallback{
+                    override fun onSuccess() {
+                        Toast.makeText(requireContext(),"Successfully added!",Toast.LENGTH_SHORT).show()
+                        findNavController().navigateUp()
+                    }
+                })
+            }
+
+
         }
     }
 
