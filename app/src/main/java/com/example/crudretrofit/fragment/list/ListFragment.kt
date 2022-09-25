@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +17,21 @@ import com.example.crudretrofit.databinding.FragmentListBinding
 import com.example.crudretrofit.models.IdModel
 import com.example.crudretrofit.models.PostModel
 import com.example.crudretrofit.repository.PostRepository
+import com.example.crudretrofit.utils.HandlerApiClient
 import com.example.crudretrofit.utils.LoadingBar
 import com.example.crudretrofit.viewmodel.MainViewModel
 import com.example.crudretrofit.viewmodel.MainViewModelFactory
 
 class ListFragment : Fragment() {
-
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
 
-    private val mViewModel: MainViewModel by viewModels { MainViewModelFactory(PostRepository()) }
-    private lateinit var loading:LoadingBar
+    private val mViewModel: MainViewModel by activityViewModels {
+        MainViewModelFactory(
+            PostRepository()
+        )
+    }
+    private lateinit var loading: LoadingBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +40,7 @@ class ListFragment : Fragment() {
         _binding = FragmentListBinding.inflate(layoutInflater, container, false)
         val view = binding.root
 
-        loading = LoadingBar(layoutInflater,requireContext())
+        loading = LoadingBar(layoutInflater, requireContext())
         loading.start()
 
         get(view)
@@ -50,21 +54,25 @@ class ListFragment : Fragment() {
 
     private fun get(view: View) {
         val rv = binding.rvPost
-        mViewModel.list()
-        mViewModel.response.observe(viewLifecycleOwner) { res ->
-            if (res.isSuccessful) {
-                    if(res.body()?.isEmpty() == true){
+        mViewModel.list().observe(viewLifecycleOwner) { response ->
+            Log.d("LISTFRAGMENT","observer called")
+            HandlerApiClient.handle(response,requireContext(),object :HandlerApiClient.HandlerCallback{
+                override fun onSuccess() {
+                    val responseBody = response.body
+                    if (responseBody.isEmpty()) {
                         binding.rvPost.visibility = View.INVISIBLE
-                        binding.tvEmptyList.visibility =  View.VISIBLE
+                        binding.tvEmptyList.visibility = View.VISIBLE
                     }
-                renderRv(res.body(),rv,view)
-                loading.stop()
-            }
+                    renderRv(responseBody, rv, view)
+                }
+
+            })
+            loading.stop()
         }
     }
 
 
-    private fun renderRv(resBody:List<PostModel>?,rv:RecyclerView,view:View) {
+    private fun renderRv(resBody: List<PostModel>?, rv: RecyclerView, view: View) {
         val rvAdapter = ListRvAdapter()
         rv.apply {
             adapter = rvAdapter
@@ -73,15 +81,26 @@ class ListFragment : Fragment() {
             rvAdapter.setData(resBody)
         }
 
-        rvAdapter.setOnItemClickCallback(object:ListRvAdapter.IOnItemCallBack{
+        rvAdapter.setOnItemClickCallback(object : ListRvAdapter.IOnItemCallBack {
             override fun delete(id: IdModel) {
                 val alertBuilder = AlertDialog.Builder(requireContext())
                 alertBuilder.setPositiveButton("Yes") { _, _ ->
-                    mViewModel.delete(id)
-                    Toast.makeText(requireContext(),"Delete successfully",Toast.LENGTH_LONG).show()
+                    mViewModel.delete(id).observe(viewLifecycleOwner) {
+                        HandlerApiClient.handle(it,requireContext(),object :HandlerApiClient.HandlerCallback{
+                            override fun onSuccess() {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Delete successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        })
+                    }
+
                 }
 
-                alertBuilder.setNegativeButton("No"){_,_ ->}
+                alertBuilder.setNegativeButton("No") { _, _ -> }
                 alertBuilder.setTitle("Delete this?")
                 alertBuilder.setMessage("Are you sure want to delete this")
                 alertBuilder.create().show()
